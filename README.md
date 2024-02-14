@@ -42,7 +42,7 @@ Now, making this request:
     "description": "My DynamicDns"
     }'
 ```
-*Change 'private.public' to the private and public part of your generated API key.*
+*Change 'private.public' to the private and public part of your generated API key.*  
 This generates this response:
 ```
     {
@@ -56,7 +56,7 @@ This generates this response:
     }
 ```
 I get the update url.
-All that's left is to create a task to update every so often.
+All that's left is to create a task to update every so often.  
 `echo "*/5 * * * * curl https://url" | crontab - `
 
 ## Ports Forwarding
@@ -77,7 +77,7 @@ In my case, with a HUAWEI EG8145V5 router, I had to enable the DMZ and map ports
     a2dissite 000-default
     a2dissite default-ssl
 ```
-*Fragment of: provision.sh*
+*Fragment of: provision.sh*  
 To create the website, I create _misitio.es.conf_ file with the basic configuration of the website.
 ```
     <VirtualHost *:80>
@@ -142,17 +142,18 @@ To access my site via HTTPS is very simple:
 To obtain the SSL certificate with Let's Encrypt follow these steps:
 1) Install CertBot `apt install certbot python3-certbot-apache`.
 2) Run `certbot --apache`.
-3) Fill in the fields that you are asked for
-   (((FOTO)))
+3) Fill in the fields that you are asked for.
 4) Save the keys that have been generated in _/etc/letsencrypt/live/domain/_.
 5) Copy them to the path of your choice and make sure it is the path specified in the configuration file.
+![letsEncrypt](https://github.com/xtabay00/Selfhosting-anto/assets/151829005/8849549b-f0b0-4e26-8227-89066910a881)
+
 
 ### Testing
-Access the following URL's and check that it works as it should.
-Access via HTTPS: https://xtabay00.es
-Access to _admin_: https://xtabay00.es/admin
-Access to _status_: https://xtabay00.es/status
-Access to the logo: https://xtabay00.es/logo.png
+Access the following URL's and check that it works as it should.  
+Access via HTTPS: https://xtabay00.es  
+Access to _admin_: https://xtabay00.es/admin  
+Access to _status_: https://xtabay00.es/status  
+Access to the logo: https://xtabay00.es/logo.png  
 Error page: https://xtabay00.es/xyz
 
 #### Performance testing
@@ -160,8 +161,9 @@ I will test with 100 users and 1000 requests, and with 1000 users and 1000 reque
 
 We will add to the request header `Accept-Encoding: gzip, deflate` with the **_-H " "_** modifier. When the server receives this request with the Accept-Encoding header, it has the option to compress the response before sending it to the client if the server supports compression and if the compression is configured correctly. Compressing the response can significantly reduce the amount of data transferred over the network, which is especially useful when performing performance tests to simulate a more realistic scenario where clients accept compressed responses.
 
-    - `ab -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://xtabay00.es/`
-    ```
+ > ab -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://xtabay00.es/
+
+    
         This is ApacheBench, Version 2.3 <$Revision: 1903618 $>
         Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
         Licensed to The Apache Software Foundation, http://www.apache.org/    
@@ -185,9 +187,9 @@ We will add to the request header `Accept-Encoding: gzip, deflate` with the **_-
         Time per request:       5.959 [ms] (mean, across all concurrent requests)
         Transfer rate:          79.49 [Kbytes/sec] received
         ...
-    ```
-    - `ab -c 1000 -n 1000 -H "Accept-Encoding: gzip, deflate" https://xtabay00.es/`
-    ```
+
+> ab -c 1000 -n 1000 -H "Accept-Encoding: gzip, deflate" https://xtabay00.es/
+
         This is ApacheBench, Version 2.3 <$Revision: 1903618 $>
         Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
         Licensed to The Apache Software Foundation, http://www.apache.org/
@@ -214,21 +216,21 @@ We will add to the request header `Accept-Encoding: gzip, deflate` with the **_-
         Transfer rate:          71.76 [Kbytes/sec] received
 
         ...
-    ```
-**Analysis:**
+        
+**Analysis:**  
 Concurrency Level 100 test:
 The server managed to handle approximately 168 requests per second, with an average time per request of around 596 milliseconds. The transfer rate indicates that about 79.49 kilobytes per second were received.
 
 Concurrency Level 1000 test:
 In this test with a concurrency level of 1000, the server managed to handle approximately 153.5 requests per second, with an average time per request of about 6515 milliseconds. The transfer rate indicates that about 71.76 kilobytes per second were received. In addition, 27 failed requests were observed, all related to the length of the response.
 
-**Conclusions:**
+**Conclusions:**  
 From 100 to 1000 the server continued to handle requests but the average time per request increased significantly, the transfer rate also decreased and 27 failed requests are observed in the test with a concurrency level of 1000, which may indicate that the server reached its maximum capacity or that there were resource issues.
 
 Let's also use the **_-k_** option, which is used to enable the keep-alive functionality.
-The persistent connection allows a single HTTP connection to be reused for multiple requests, rather than opening and closing a new connection for each individual request. This simulates behaviour more like that of a typical web browser, which uses persistent connections to load multiple resources on a web page without having to open and close a connection for each resource. This positively affects performance testing by reducing the time and resources required to establish new connections.
-    - `ab -c 1000 -n 1000 -H "Accept-Encoding: gzip, deflate" -k https://xtabay00.es/`
-    ```
+The persistent connection allows a single HTTP connection to be reused for multiple requests, rather than opening and closing a new connection for each individual request. This simulates behaviour more like that of a typical web browser, which uses persistent connections to load multiple resources on a web page without having to open and close a connection for each resource. This positively affects performance testing by reducing the time and resources required to establish new connections.  
+> ab -c 1000 -n 1000 -H "Accept-Encoding: gzip, deflate" -k https://xtabay00.es/
+
         ...
         Concurrency Level:      1000
         Time taken for tests:   4.394 seconds
@@ -243,15 +245,15 @@ The persistent connection allows a single HTTP connection to be reused for multi
         Time per request:       4.394 [ms] (mean, across all concurrent requests)
         Transfer rate:          82.06 [Kbytes/sec] received
         ...
-    ```
-**Analysis:**
+
+**Analysis:**  
 Test with Concurrency Level 1000 and Keep-Alive:
 In this test the server managed to handle about 227.58 requests per second, which is an increase compared to the previous test without persistent connections.
 The average time per request was reduced to approximately 4394 milliseconds, indicating an improvement in performance compared to the previous test without persistent connections.
 The transfer rate increased to 82.06 kilobytes per second received.
 292 failed requests were observed, again indicating that the server is reaching its limits under higher load.
 
-**Conclusion:**
+**Conclusion:**  
 Overall, these results suggest that the server performs acceptably under moderate load, but its capacity is negatively affected when concurrency is increased to higher levels.
 
 ##### Comparison
@@ -263,6 +265,7 @@ Finally, let's make a comparison with a different server. That of the IES Zaidin
 | Transfer rate [Kbytes/sec]              | 117.27                       | 619.79                       |
 | Total transferred [bytes]               | 447256                       | 2366568                      |
 | Failed requests                         | 151                          | 977                          |
+
 They have more or less similar performance, the most noticeable difference is the data transfer rate.
 Why does this happen?
 If we look at the amount of data transferred we have that the IZV transfers 5,291 times more bytes than xtabay00, which explains why the transfer rate is 2,285 times higher.
@@ -290,7 +293,7 @@ I create a virtual machine called 'web' with Vagrant.
 
     end
 ```
-*Fragment of: Vagrantfile*
+*Fragment of: Vagrantfile*  
 Apart from all the files, for automation with Vagrant, I have created a provision files. In it is everything explained above, the installation of the services, the copy of the relevant configuration files and the enabling of the services.
 
-If you want to deploy this practice, download the whole folder, go to it from cmd and run "vagrant up".
+If you want to deploy this practice, download the whole folder, go to it from cmd and run `vagrant up`.
