@@ -268,7 +268,7 @@ Finally, let's make a comparison with a different server. That of the IES Zaidin
 
 They have more or less similar performance, the most noticeable difference is the data transfer rate.
 Why does this happen?
-If we look at the amount of data transferred we have that the IZV transfers 5,291 times more bytes than xtabay00, which explains why the transfer rate is 2,285 times higher.
+If we look at the amount of data transferred we have that the IZV transfers 5.291 times more bytes than xtabay00, which explains why the transfer rate is 5.285 times higher.
 So the performance of both is very similar.
 
 ## Vagrant
